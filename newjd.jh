@@ -1,0 +1,167 @@
+
+application {
+  config {
+    baseName myApp,
+    applicationType monolith,
+    packageName com.myapp,
+    authenticationType jwt,
+    prodDatabaseType mysql,
+    clientFramework angular
+  }
+  entities *
+}
+
+entity ApiTransactionLog {
+    transactionId Integer
+    sourceSystemCode String
+     requestId Integer
+     userId String
+     userName String
+     userRole String
+     operation String
+     parameters String
+     apiVersion String
+     requestRecievedTime Instant
+     requestSentTime Instant
+     responesStatusCode Integer
+     responseDescription String
+     comments String
+     perId Integer
+     recordCreationUserId String
+     recordCreationInstant Instant
+     recordUpdatedUserId String
+     recordUpdatedInstant Instant
+}
+
+entity PaymentActualRecord {
+    paymentActualRecordIdentifier Integer
+    paymentexpectationrecord PaymentExpectationRecord
+    paymentActualDate Date
+    paymentActualAmount BigDecimal
+    recordCreationUserId String
+    recordCreationInstant Instant
+    recordUpdatedUserId String
+    recordUpdatedInstant Instant
+    recordTransactionId Integer
+}
+
+entity PaymentActualRecordHistory {
+    paymentActualRecordHistoryIdentifier Integer
+    paymentActualRecord PaymentActualRecord
+    perId Integer
+    paymentActualAmount BigDecimal
+    paymentActualDate Date
+    recordCreationUserId String
+    recordCreationInstant Instant
+    recordUpdatedUserId String
+    recordUpdatedInstant Instant
+    recordTransactionId Integer
+    recordHistCreationInstant Instant
+}
+
+entity PaymentAssociation {
+    paymentAssocationKeyId Integer 
+    paymentAssociationKeyName String
+    paymentAssociationKeyValue String
+    sourceSystemApplicationCode String
+    recordCreationUserId String
+    recordCreationInstant Instant
+    recordUpdatedUserId String
+    recordUpdatedInstant Instant
+    recordTransactionId Integer
+}
+
+entity PaymentAssociationAttributes {
+    paymentAssociationAttributeIdentifier String,
+    paymentassociationkey PaymentAssociation
+    attributeName String
+    attributeValue String
+    recordCreationUserId String
+    recordCreationInstant Instant
+    recordUpdatedUserId String
+    recordUpdatedInstant Instant
+    recordTransactionId Integer
+}
+
+
+entity PaymentExpectationRecord {
+    /**
+    * The firstname attribute.
+    */
+    paymentExpectationRecordIdentifer Integer,
+     paymentAssociation PaymentAssociation,
+    paymentTransactionCode PaymentTransactionCode,
+    paymentExpectedDate Date,
+    paymentExpectedAmount BigDecimal,
+    paymentStatus String,
+    recordCreationUserId String
+    recordCreationInstant Instant
+    recordUpdatedUserId String
+    recordUpdatedInstant Instant
+    recordTransactionId Integer
+    paymentActualRecord PaymentActualRecord
+    PaymentEXRecAltId PaymentEXRecAltId
+}
+
+entity PaymentEXRecAltId {
+    alternateIdentifier Integer,
+    paymentexpectationrecord PaymentExpectationRecord,
+    PaymentEXRecAltIdName String
+    PaymentEXRecAltIdValue String
+    sourceSystemApplicationCode String
+    recordCreationUserId String
+    recordCreationInstant Instant
+    recordUpdatedUserId String
+    recordUpdatedInstant Instant
+    recordTransactionId Integer
+}
+
+entity PaymentExpRecordHis {
+    perHistId Integer,
+    paymentExpectationRecord PaymentExpectationRecord,
+    paymentAssociationId Integer
+    paymentTransactionCode Integer
+    paymentExpectedDate Date
+    paymentExpectedAmount BigDecimal
+    paymentStatus String
+    recordCreationUserId String
+    recordCreationInstant Instant
+    recordUpdatedUserId String
+    recordUpdatedInstant Instant
+    recordTransactionId Integer
+recordHistCreationInstant Instant
+}
+
+entity PaymentExpRequestModel {
+      paymentExpectationRecord PaymentExpectationRecord 
+operation String
+}
+ 
+ entity PaymentTransactionCode {
+ transactionCodeId Integer
+ transactionCode Integer
+ transactionCodeDescription String
+ secondarytransactioncode Integer
+ secondaryTransactionCodeDescription String
+ paymentType String
+ paymentDirection String
+ recordCreationUserId String
+ recordCreationInstant Instant
+ recordUpdatedUserId String
+ recordUpdatedInstant Instant
+ recordTransactionId Integer
+ }
+
+
+ relationship ManyToOne{
+
+     PaymentActualRecord to PaymentExpectationRecord{paymentexpectationrecord}
+     PaymentActualRecordHistory to PaymentActualRecord{paymentActualRecord}
+     PaymentAssociationAttributes to PaymentAssociation{paymentassociationkey}
+     PaymentExpectationRecord to PaymentAssociation{paymentAssociation}
+     PaymentExpectationRecord to PaymentTransactionCode{paymentTransactionCode}
+     PaymentEXRecAltId to PaymentExpectationRecord{paymentexpectationrecord}
+PaymentExpRecordHis to PaymentExpectationRecord{paymentExpectationRecord}
+}
+ 
+
